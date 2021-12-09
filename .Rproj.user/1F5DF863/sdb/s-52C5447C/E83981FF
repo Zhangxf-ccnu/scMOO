@@ -1,0 +1,20 @@
+{
+    "collab_server" : "",
+    "contents" : "Package: scMOO\nType: Package\nTitle: Accurate gene expression recovery for single-cell RNA sequencing via multi-objective optimization\nVersion: 1.1\nAuthor: Ke Jin, Xiao-Fei Zhang\nMaintainer: Ke Jin <kej13@mails.ccnu.edu.cn>\nDescription: scMOO assumes that the data is a combination of three types of latent structures, horizontal structure (genes are similar with each other), vertical structure (cells are similar with each other), and low-rank structure. The combination weights and latent structures are learned using multi-objective optimization, and the weighted average of the observed data and the imputation results learned from the three types of structures is considered as the final result.\nLicense: GPL-2\nEncoding: UTF-8\nLazyData: true\nRoxygenNote: 6.1.1\nDepends: R (>= 3.5.0)\nImports: keras, tensorflow, rsvd\nSuggests: knitr, rmarkdown\nVignetteBuilder: knitr\n\n\n",
+    "created" : 1639042129105.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "4214425732",
+    "id" : "E83981FF",
+    "lastKnownWriteTime" : 1639051105,
+    "last_content_update" : 1639051105081,
+    "path" : "~/Desktop/scMOO/DESCRIPTION",
+    "project_path" : "DESCRIPTION",
+    "properties" : {
+    },
+    "relative_order" : 4,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "dcf"
+}

@@ -1,0 +1,20 @@
+{
+    "collab_server" : "",
+    "contents" : "#' Peripheral blood mononuclear cells (PBMC)\n\n#'\n\n#' This is the PBMC dataset sequenced using platform CEL-Seq2 (GSE132044), thus we rename it as \"PBMC_CL\".\n#'\n#' We download the preprocessed data from https://doi.org/10.5281/zenodo.3357167.\n#'\n#' The data contains 20,041 genes and 243 cells with true cell labels. We then select 2,000 highly variable genes using Seurat v3.2 before imputation.\n\n#'\n\n#' @examples\n\n#' data(\"PBMC_CL\")\n\n#' @author Ke Jin, \\email{kej13@mails.ccnu.edu.cn}\n\n#' @references Ding, J. et al (2020). Systematic comparison of single-cell and single-nucleus rna-sequencing methods. \\emph{Nat. Biotechnol.}, 38:737-746.\n\n#'\n\n\"PBMC_CL\"\n",
+    "created" : 1639052026133.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3317842118",
+    "id" : "48BB9F0E",
+    "lastKnownWriteTime" : 1639042323,
+    "last_content_update" : 1639042323,
+    "path" : "~/Desktop/scMOO/R/data.R",
+    "project_path" : "R/data.R",
+    "properties" : {
+    },
+    "relative_order" : 3,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

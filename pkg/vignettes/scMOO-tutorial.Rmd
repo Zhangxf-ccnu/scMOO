@@ -1,0 +1,123 @@
+---
+title: "scMOO-tutorial"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{scMOO-tutorial}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+## 1. Installation
+Step 1. If the "devtools" package has not been installed, install the "devtools" package first.
+```{r setup, eval=FALSE}
+install.packages("devtools")
+```
+Step 2. Install the "scMOO" package from GitHub.
+```{r install, eval=FALSE}
+devtools::install_github("Zhangxf-ccnu/scMOO", subdir="pkg")
+```
+## 2. Quick Start
+To perform imputation, simply run:
+```{r scmoo, eval=FALSE}
+library(scMOO)
+data(PBMC_CL)
+result <- scMOO(PBMC_CL, percent=0, verbose=TRUE, estimates.only=FALSE)
+```
+Here we use PBMC_CL dataset used in the cell clustering analysis as an example. Note that the PBMC_CL dataset has been preporcessed using Seurat with 2,000 selected highly variable genes and whose column names are true cell labels.  
+&nbsp;&nbsp;&nbsp;&nbsp;`percent`: The expression count matrix is preprocessed by filtering out the genes expressed in at most percent*100\% of the cells. In the above example, we set `percent=0` for that we have selected 2,000 highly variable genes.    
+&nbsp;&nbsp;&nbsp;&nbsp;`verbose`: Whether to output the value of metrics at the end of each epoch. Default is TRUE.   
+&nbsp;&nbsp;&nbsp;&nbsp;`estimates.only`: If `estimates.only = TRUE`, `scMOO()` returns a matrix of scMOO estimates;   
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;                  If `estimates.only = FALSE`, `scMOO()` returns the following list of values:      
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; `estimate`: Recovered (normalized) expression.   
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; `size.factor`: Size factor used for normalization.   
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; `pred.time`: Total time for scMOO estimate.   
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; `alpha`: Tuning parameter to balance the error between the imputed and observed data &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;and the eror of model fitting data.    
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; `w`: The combination weights $\omega_{1}$, $\omega_{2}$ and $\omega_{3}$.
+
+## 3. Downstream analysis: Cell clustering 
+### 3.1 Selecting highly variable genes before imputation
+```{r hvgs, eval=FALSE}
+library(Seurat)
+x.seurat <- CreateSeuratObject(raw_data) ## colnames of data are ture cell labels
+x.seurat <- NormalizeData(x.seurat)
+x.seurat <- ScaleData(x.seurat)
+x.seurat <- FindVariableFeatures(x.seurat, verbose = FALSE)
+
+filter_ID <- x.seurat@assays$RNA@var.features
+data_hvgs <- data[filter_ID,]
+```
+Through 3.1, we can obtain PBMC_CL dataset with 2,000 highly variable genes before imputation.      
+
+### 3.2 Imputing dropouts using scMOO
+```{r imputation, eval=FALSE}
+library(scMOO)
+result <- scMOO(PBMC_CL,  percent=0, estimate.only=TRUE)
+```
+By setting `estimate.only=TRUE`, we can obtain a matrix of scMOO estimates.
+
+### 3.3 Performing cell clustering using SC3
+```{r sc3, eval=FALSE}
+library(SingleCellExperiment)
+library(SC3)
+library(mclust)
+library(aricode)
+
+sce <- SingleCellExperiment(
+  assays = list(
+    counts = as.matrix(result),
+    logcounts = log2(as.matrix(result) + 1)
+  ), 
+  colData = colnames(result)
+)
+
+
+rowData(sce)$feature_symbol <- rownames(sce)
+
+label <- colnames(result)
+
+K <- length(unique(label))
+
+
+result <- sc3(sce, ks = K, gene_filter = FALSE) 
+
+ARI <- adjustedRandIndex(label, result@colData@listData$sc3_6_clusters) #### '6' in 'sc3_6_clusters' is consistant, and equals to the number of cell types 
+
+NMI <- NMI(result@colData@listData$sc3_6_clusters, label)
+
+```
+We first perform cell lustering using `SC3` on the imputed results. The R package
+`SC3` is for implementing `SC3`, and the parameter `ks`, which determines
+the number of clusters, is chosen as the known number of cell types. Here `ks` is set as 6 on the PBMC_CL dataset.  
+To compare the clustering results, we use the **Adjusted Rand Index**
+(ARI) and the **Normalized Mutual Information** (NMI) to evaluate the
+consistency between the results of `SC3` and the reference labels
+of cells. The closer the indexes of **ARI** and **NMI** are to 1, the better the
+clustering results will be.
+
+### 3.4 Performing cell clustering using Seurat
+```{r seurat, eval=FALSE}
+library(Seurat)
+x.seurat <- CreateSeuratObject(result) 
+x.seurat <- NormalizeData(x.seurat)
+x.seurat <- ScaleData(x.seurat)
+x.seurat <- FindVariableFeatures(x.seurat, verbose = FALSE)
+
+x.seurat <- RunPCA(x.seurat, features = VariableFeatures(object = x.seurat))  
+x.seurat <- JackStraw(x.seurat, num.replicate = 100)
+x.seurat <- ScoreJackStraw(x.seurat, dims = 1:20)
+x.seurat <- FindNeighbors(x.seurat, dims = 1:10)
+x.seurat <- FindClusters(x.seurat, resolution = 0.5)
+
+label <- colnames(result)
+
+ARI <- adjustedRandIndex(as.factor(label), x.seurat$seurat_clusters)
+
+NMI <- NMI(x.seurat$seurat_clusters, as.factor(label))
+```
+We then perform cell lustering using `Seurat` on the imputed results. Similarly, **ARI** and **NMI** are used to evaluate the consistency between the results of `Seurat` and the reference labels of cells.
