@@ -13,6 +13,8 @@ scMOO(Y.count, W = NULL, K = 0, q = 10, percent = 0.05,
 \item{W}{W_{gc} is set to the ratio of the number of non-zero elements in Y to the number
 of zero elements in Y if Y_{gc} = 0, and to 1 otherwise.}
 
+\item{K}{The rank of the low-rank approximation matrix.}
+
 \item{q}{The parameter for number of additional power iterations.}
 
 \item{percent}{The expression count matrix is preprocessed by filtering out the genes
@@ -37,8 +39,6 @@ observed data and the error of model fitting data.}
 
 \item{Y_count}{An expression count matrix. The rows correspond to genes and
 the columns correspond to cells. Can be sparse.}
-
-\item{k}{The rank of the low-rank approximation matrix.}
 
 \item{MAX_ITER}{Maximum iteration of scMOO.}
 

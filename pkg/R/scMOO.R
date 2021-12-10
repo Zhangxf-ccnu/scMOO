@@ -6,7 +6,7 @@
 #' @param W W_{gc} is set to the ratio of the number of non-zero elements in Y to the number
 #' of zero elements in Y if Y_{gc} = 0, and to 1 otherwise.
 #'
-#' @param k The rank of the low-rank approximation matrix.
+#' @param K The rank of the low-rank approximation matrix.
 #'
 #' @param q The parameter for number of additional power iterations.
 #'
