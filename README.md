@@ -47,7 +47,11 @@ For detailed usages, please refer to "scMOO_1.1.pdf".
 Tutorial
 ------------------------
 A tutorial with examples of cell clustering (downstream experiment) illustrating the usage of `scMOO` is available at:
-[scMOO-tutorial.html](https://github.com/Zhangxf-ccnu/scMOO/blob/main/pkg/vignettes/scMOO-tutorial.html) 
+[scMOO-tutorial.html](https://github.com/Zhangxf-ccnu/scMOO/blob/main/pkg/vignettes/scMOO-tutorial.Rmd) 
+
+Reproduce analysis 
+------------------------
+The directory containing the code to reproduce differential expression analysis, cell clustering analysis, and cell trajectory inference analysis can be found at [https://github.com/Zhangxf-ccnu/scMOO_experiments_codes](https://github.com/Zhangxf-ccnu/scMOO_experiments_codes). The  directory containing the code to reproduce data masking and down-sampling experiments can be obtained from [https://github.com/ChenMengjie/Vpaper2018]( https://github.com/ChenMengjie/Vpaper2018).
 
 
 Contact
