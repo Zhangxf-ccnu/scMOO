@@ -24,7 +24,7 @@ Installation
 
 ### Step 3. Install the scMOO package from GitHub.
 
-`install_github("Zhangxf-ccnu/scMOO", subdir="pkg")`
+`install_github("Zhangxf-ccnu/scMOO", subdir="pkg", build_vignettes = TRUE)`
 
 
 Quick start
