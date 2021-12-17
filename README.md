@@ -49,7 +49,7 @@ For detailed usages, please refer to "scMOO_1.1.pdf".
 Tutorial
 ------------------------
 A tutorial with examples of cell clustering (downstream experiment) illustrating the usage of `scMOO` is available at:
-[scMOO-tutorial.html](https://github.com/Zhangxf-ccnu/scMOO/blob/main/pkg/vignettes/scMOO-tutorial.html) 
+[scMOO-tutorial.html](https://github.com/Zhangxf-ccnu/scMOO/blob/main/pkg/vignettes/scMOO-tutorial.Rmd) 
 
 
 Contact
