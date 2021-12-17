@@ -1,4 +1,6 @@
-README file for R package supporting the paper    **"Imputing dropouts for single-cell RNA sequencing based on multi-objective optimization"**.
+scMOO [![DOI:10.5281/zenodo.5785195](https://zenodo.org/badge/DOI/10.5281/zenodo.5785195.svg)](https://doi.org/10.5281/zenodo.5785195)
+------------------------
+R package supporting the paper **"Imputing dropouts for single-cell RNA sequencing based on multi-objective optimization"**. 
 
 
 Contents of this archive
@@ -24,7 +26,7 @@ Installation
 
 ### Step 3. Install the scMOO package from GitHub.
 
-`install_github("Zhangxf-ccnu/scMOO", subdir="pkg", build_vignettes = TRUE)`
+`install_github("Zhangxf-ccnu/scMOO", subdir="pkg")`
 
 
 Quick start
@@ -47,11 +49,7 @@ For detailed usages, please refer to "scMOO_1.1.pdf".
 Tutorial
 ------------------------
 A tutorial with examples of cell clustering (downstream experiment) illustrating the usage of `scMOO` is available at:
-[scMOO-tutorial.Rmd](https://github.com/Zhangxf-ccnu/scMOO/blob/main/pkg/vignettes/scMOO-tutorial.Rmd) 
-
-Reproduce analysis 
-------------------------
-The directory containing the code to reproduce differential expression analysis, cell clustering analysis, and cell trajectory inference analysis can be found at [https://github.com/Zhangxf-ccnu/scMOO_experiments_codes](https://github.com/Zhangxf-ccnu/scMOO_experiments_codes). The  directory containing the code to reproduce data masking and down-sampling experiments can be obtained from [https://github.com/ChenMengjie/Vpaper2018]( https://github.com/ChenMengjie/Vpaper2018).
+[scMOO-tutorial.html](https://github.com/Zhangxf-ccnu/scMOO/blob/main/pkg/vignettes/scMOO-tutorial.html) 
 
 
 Contact
